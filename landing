@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EverArcade → EverVault | RWA-Backed Gaming + QOZB DeFi Vaults on Evernode/Xahau</title>
+  <meta name="description" content="The first fully on-chain, play-to-own arcade backed by real-world assets. Compliant 10-year QOZB vaults powered by Evernode HotPocket + Denis Angell smart issuers. XRPL Grants Round 7 submission." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://everarcade.games/favicon.ico"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap');
+    body { font-family: 'Rajdhani', sans-serif; }
+    h1, h2 { font-family: 'Orbitron', sans-serif; }
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col">
+  <!-- Hero -->
+  <section class="relative flex-1 flex items-center justify-center overflow-hidden bg-gradient-to-br from-purple-900 via-black to-cyan-900">
+    <div class="absolute inset-0 bg-[url('https://assets.website-files.com/64e0a3.../noise.png')] opacity-20"></div>
+    
+    <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+      <h1 class="text-6xl md:text-8xl font-black mb-4 tracking-tighter">
+        EVER<span class="text-cyan-400">ARCADE</span>
+      </h1>
+      <p class="text-2xl md:text-4xl font-bold text-cyan-300 mb-8">
+        Real-World Asset Arcade + 10-Year QOZB Vaults
+      </p>
+      <p class="text-lg md:text-xl max-w-3xl mx-auto mb-12 opacity-90">
+        The first production-ready, acquisition-grade gaming + DeFi primitive on Evernode/Xahau.<br/>
+        Fully on-chain games (HotPocket) + tokenized real estate vaults (Denis Angell smart-issuer + escrow hooks).
+      </p>
+
+      <!-- Badges / Cred -->
+      <div class="flex flex-wrap gap-4 justify-center mb-12">
+        <span class="px-6 py-3 bg-cyan-500/20 border border-cyan-500 rounded-full text-cyan-300">Evernode Native</span>
+        <span class="px-6 py-3 bg-purple-500/20 border border-purple-500 rounded-full text-purple-300">Xahau Hooks</span>
+        <span class="px-6 py-3 bg-green-500/20 border border-green-500 rounded-full text-green-300">RWA-Backed</span>
+        <span class="px-6 py-3 bg-yellow-500/20 border border-yellow-500 rounded-full text-yellow-300">XRPL Grants R7</span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-6 justify-center">
+        <a href="https://xrplgrants.org" target="_blank" class="px-10 py-5 bg-cyan-500 hover:bg-cyan-400 text-black font-bold text-xl rounded-lg transition">
+          XRPL Grants Application → 
+        </a>
+        <a href="https://everarcade.xyz/whitepaper.pdf" class="px-10 py-5 border-2 border-cyan-500 hover:bg-cyan-500/10 font-bold text-xl rounded-lg transition">
+          Litepaper (PDF)
+        </a>
+      </div>
+
+      <p class="mt-16 text-sm opacity-60">
+        everarcade.games • everarcade.xyz • evervault.xyz (acquiring)<br/>
+        Launching Q1 2026 | Built by the Evernode OGs
+      </p>
+    </div>
+
+    <!-- Subtle scrolling marquee -->
+    <div class="absolute bottom-0 left-0 w-full overflow-hidden">
+      <div class="animate-marquee whitespace-nowrap text-cyan-400/30 text-8xl font-black">
+        EVERARCADE ∞ EVERVAULT ∞ EVERARCADE ∞ EVERVAULT ∞
+      </div>
+    </div>
+  </section>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            marquee: 'marquee 20s linear infinite',
+          },
+          keyframes: {
+            marquee: {
+              '0%': { transform: 'translateX(0%)' },
+              '100%': { transform: 'translateX(-50%)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
