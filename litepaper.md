@@ -91,6 +91,4 @@ The grant just lets us open the developer floodgates and the vault TVL pipe at t
 everarcade.games → players + developers  
 evervault.me      → accredited investors only  
 
-Three user groups. Two products. One stack. Zero confusion.
-
-Let’s go.
+Three user groups. Two products. One stack. 
