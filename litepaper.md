@@ -13,7 +13,7 @@ fontsize: 11pt
 2. **Game Developers** – indie studios & solo devs who want to ship WASM games with instant revenue  
 3. **Vault Investors** – U.S. accredited persons with capital-gains tax exposure looking for QOZ real-estate
 
-Two separate front-ends. Two separate revenue models. Zero user-story confusion.
+Two separate front-ends. Two separate revenue models.
 
 # 1. EverArcade – For Players & Developers (Q1 2026)
 
