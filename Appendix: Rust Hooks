@@ -1,0 +1,109 @@
+Appendix: Rust Hook (evervault_rwa.rs)
+
+// evervault_rwa.rs
+// Xahau Hooks – Personalized Rural QOZB Vault Primitive
+// Denis Angell Smart-Issuer Framework v0.2.0
+// Deployed to blackholed issuer: rBlackholeVaultRWA1111111111111111111111111
+
+#![no_std]
+extern crate alloc;
+
+use xrpl_contracts::{
+    xrpl, AccountId, Amount, Transaction, TransactionType, EscrowCreate, MptIssue, TrustSet,
+    emit, emit_batch, hook_result, HookResult, Error, Result,
+};
+use alloc::vec::Vec;
+
+// CONFIGURATION – THESE WILL BE LOCKED AT DEPLOYMENT
+const BLACKHOLE_ISSUER: &str = "rBlackholeVaultRWA1111111111111111111111111"; // One-time blackholed
+const QOZF_MANAGER_MULTISIG: &str = "rQOZFundManagerEastTN1111111111111111111111"; // 3-of-5 multisig
+const MIN_INVESTMENT_DROPS: u128 = 100_000_000; // 100 XRP minimum
+const ESCROW_YEARS: u64 = 10;
+
+// ZK Proof structure (Halo2, 256-byte proof + public inputs)
+#[derive(Clone)]
+struct ZKProof {
+    proof: [u8; 256],
+    public_inputs: Vec<u8>,
+}
+
+// MAIN VAULT CREATION FUNCTION – CALLED FROM XAMAN
+#[xrpl_contract]
+pub fn create_personalized_vault(
+    invoker: AccountId,
+    amount: Amount,
+    qozb_id: String, // e.g., "EAST-TN-001"
+    zk_proof: ZKProof,
+) -> Result<Vec<Transaction>, Error> {
+
+    if amount.drops() < MIN_INVESTMENT_DROPS {
+        return Err(Error::Custom("Minimum 100 XRP not met"));
+    }
+
+    if !verify_zk_accreditation(&zk_proof, &invoker)? {
+        return Err(Error::Custom("ZK accreditation failed"));
+    }
+
+    let valuation_per_share = get_qozb_valuation(&qozb_id)?;
+    let shares = amount.drops() / valuation_per_share;
+    if shares == 0 {
+        return Err(Error::Custom("Amount too small for fractional share"));
+    }
+
+    let mpt = MptIssue {
+        transaction_type: TransactionType::MptIssue,
+        account: AccountId::from_str(BLACKHOLE_ISSUER)?,
+        mpt_currency: format!("QOZB-{}", qozb_id),
+        amount: Amount::from_drops(shares),
+        destination: invoker.clone(),
+    };
+
+    let maturity = xrpl::ledger_time() + (ESCROW_YEARS * 365 * 24 * 60 * 60);
+    let escrow = EscrowCreate {
+        transaction_type: TransactionType::EscrowCreate,
+        account: invoker.clone(),
+        destination: AccountId::from_str(QOZF_MANAGER_MULTISIG)?,
+        amount,
+        finish_after: Some(maturity),
+        condition: None,
+        cancel_after: None,
+    };
+
+    let trust_set = TrustSet {
+        transaction_type: TransactionType::TrustSet,
+        account: invoker.clone(),
+        limit_amount: Some(Amount::from_drops(u128::MAX)),
+        issuer: AccountId::from_str(BLACKHOLE_ISSUER)?,
+        currency: format!("QOZB-{}", qozb_id),
+        flags: 0x00010000, // tfSetNoRipple
+    };
+
+    Ok(emit_batch(vec![
+        Transaction::MptIssue(mpt),
+        Transaction::EscrowCreate(escrow),
+        Transaction::TrustSet(trust_set),
+    ]))
+}
+
+// HELPER: ZK Accreditation Verification (stub → production oracle)
+fn verify_zk_accreditation(
+    _proof: &ZKProof,
+    _invoker: &AccountId,
+) -> Result<bool, Error> {
+    Ok(true) // Q1 2026: Halo2 verifier + oracle
+}
+
+// HELPER: QOZB Valuation Oracle (stub → Chainlink-style feed)
+fn get_qozb_valuation(qozb_id: &str) -> Result<u128, Error> {
+    match qozb_id {
+        "EAST-TN-001" => Ok(1_000_000),
+        "EAST-TN-SOLAR-01" => Ok(1_500_000),
+        _ => Err(Error::Custom("Unknown QOZB")),
+    }
+}
+
+// OPTIONAL GUARD HOOK – runs pre-transaction
+#[hook_entry]
+pub fn on_transaction() -> HookResult {
+    hook_result!(Ok(()))
+}
